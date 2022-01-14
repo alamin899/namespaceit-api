@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 class Post extends Model
 {
@@ -17,20 +18,20 @@ class Post extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function setThumbnailUri(?UploadedFile $file)
+    public function setThumbnailUri($request)
     {
-
+        if (!$this->exists) {
+            throw new \Exception('Must be saved first to set Image Uri.');
+        }
         $storageDir = $this->storageDir();
 
         $timestamp = time();
 
         $thumbnail_path = "$storageDir/images/$timestamp";
 
-        $path   = $request->file('createcommunityavatar');
+        Storage::disk('public')->put($thumbnail_path, $request->file('thumbnail'));
 
-        $originalWebP = $this->generateImages($file, $thumbnail_path, self::image_sizes);
-
-        $this->thumbnail = $originalWebP;
+        $this->thumbnail = $thumbnail_path;
     }
 
     public function storageDir(): string

@@ -35,8 +35,8 @@ class PostController extends Controller
             'body' => $request->body
         ]);
 
-        if ($request->file) {
-            $post->setThumbnail($request->file('thumbnail'));
+        if ($request->file('thumbnail')) {
+            $post->setThumbnailUri($request);
 
             $post->save();
         }
@@ -97,8 +97,8 @@ class PostController extends Controller
             'body' => $request->body
         ]);
 
-        if ($request->file) {
-            $post->setThumbnail($request->file('thumbnail'));
+        if ($request->file('thumbnail')) {
+            $post->setThumbnailUri($request);
 
             $post->save();
         }
