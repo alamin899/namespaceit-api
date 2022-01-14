@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\UploadedFile;
 
 class Post extends Model
 {
@@ -18,20 +19,14 @@ class Post extends Model
 
     public function setThumbnailUri(?UploadedFile $file)
     {
-        if (!$file) {
-            $this->thumbnail = null;
-            return;
-        }
-
-        if (!$this->exists) {
-            return response()->json(["message" => "The model must exists to get storageDir"]);
-        }
 
         $storageDir = $this->storageDir();
 
         $timestamp = time();
 
         $thumbnail_path = "$storageDir/images/$timestamp";
+
+        $path   = $request->file('createcommunityavatar');
 
         $originalWebP = $this->generateImages($file, $thumbnail_path, self::image_sizes);
 
